@@ -168,6 +168,10 @@ module.exports = function () {
         return instructions.legs.map(l => l.annotation.nodes.map(n => n.toString()).join(',')).join(',');
     };
 
+    this.lanesList = (instructions) => {
+        return this.extractInstructionList(instructions, s => "lanes" in s.maneuver ? s.maneuver.lanes.join(' ') : '');
+    };
+
     this.turnList = (instructions) => {
         return instructions.legs.reduce((m, v) => m.concat(v.steps), [])
             .map(v => {

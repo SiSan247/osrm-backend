@@ -385,6 +385,14 @@ void collapseTurnAt(std::vector<RouteStep> &steps,
     };
 
     BOOST_ASSERT(!one_back_step.intersections.empty() && !current_step.intersections.empty());
+    const auto isCollapsableInstruction = [](const TurnInstruction instruction) {
+        return instruction.type == TurnType::NewName ||
+               instruction.type == TurnType::UseLane ||
+               (instruction.type == TurnType::Turn &&
+                instruction.direction_modifier == DirectionModifier::Straight);
+    };
+    std::cout << "At: " << step_index << std::endl;
+    print(steps);
     // Very Short New Name
     if (collapsable(one_back_step))
     {
@@ -440,6 +448,7 @@ void collapseTurnAt(std::vector<RouteStep> &steps,
              compatible(one_back_step, current_step))
 
     {
+        print(steps);
         BOOST_ASSERT(two_back_index < steps.size());
         // the simple case is a u-turn that changes directly into the in-name again
         const bool direct_u_turn = steps[two_back_index].name == current_step.name;
@@ -618,6 +627,14 @@ std::vector<RouteStep> collapseTurns(std::vector<RouteStep> steps)
         return index;
     };
 
+    //TODO needs to check whether lane data is required!
+    const auto isCollapsableInstruction = [](const TurnInstruction instruction) {
+        return instruction.type == TurnType::NewName ||
+                instruction.type == TurnType::UseLane ||
+               (instruction.type == TurnType::Turn &&
+                instruction.direction_modifier == DirectionModifier::Straight);
+    };
+
     // a series of turns is only possible to collapse if its only name changes and suppressed turns.
     const auto canCollapseAll = [&steps](std::size_t index, const std::size_t end_index) {
         BOOST_ASSERT(end_index <= steps.size());
@@ -781,6 +798,7 @@ std::vector<RouteStep> collapseTurns(std::vector<RouteStep> steps)
 // usually not be as relevant.
 void trimShortSegments(std::vector<RouteStep> &steps, LegGeometry &geometry)
 {
+    print(steps);
     if (steps.size() < 2 || geometry.locations.size() <= 2)
         return;
 
