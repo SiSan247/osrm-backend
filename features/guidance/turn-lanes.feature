@@ -299,18 +299,16 @@ Feature: Turn Lane Guidance
             |   |   | y |   | e |   |   |
 
         And the ways
-            | nodes | turn:lanes:forward   | turn:lanes:backward |
-            | ab    | through\|right&right |                     |
-            | bx    |                      |                     |
-            | bc    | left\|through        | left\|right         |
-            | cd    | through\|right       | left\|right         |
-            | cy    |                      |                     |
-            | dz    |                      |                     |
-            | de    |                      |                     |
+            | nodes | turn:lanes:forward         |
+            | ab    | through\|right&right&right |
+            | bx    |                            |
+            | bc    | left\|left&through         |
+            | cd    | through\|right             |
+            | cy    |                            |
+            | dz    |                            |
+            | de    |                            |
 
        When I route I should get
-            | waypoints | route          | turns                                                             | lanes     | #      |
-            | a,d       | ab,bc,cd,cd    | depart,turn right,turn left,arrive                                | ,0 1,1,   | 2 hops |
-            | d,a       | cd,bc,ab,ab    | depart,end of road right,end of road left,arrive                  | ,0,1,     | 2 hops |
-            | a,e       | ab,bc,cd,de,de | depart,turn right,turn left,turn right,arrive                     | ,0 1,1,0, | 3 hops |
-            | e,a       | de,cd,bc,ab,ab | depart,end of road left,end of road right,end of road left,arrive | ,,0,1,    | 3 hops |
+            | waypoints | route          | turns                                         | lanes     | #      |
+            | a,d       | ab,bc,cd,cd    | depart,turn right,turn left,arrive            | ,1 2,1 2, | 2 hops |
+            | a,e       | ab,bc,cd,de,de | depart,turn right,turn left,turn right,arrive | ,1,1,0,   | 3 hops |
